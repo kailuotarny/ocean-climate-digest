@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>每日高水平论文精选 · 海洋与气候</title>
+  <meta name="description" content="自动拉取昨天的海洋与气候顶级期刊论文，含每篇1句关键结论、2–3句与前人对比、1个可检验的未解问题。" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #111a2b;
+      --text: #e7eefc;
+      --muted: #9bb0d0;
+      --accent: #4aa3ff;
+      --chip: #1b2740;
+      --border: #2a3a58;
+      --good: #27c93f;
+    }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--bg); color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans",
+      "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
+    header { position:sticky; top:0; z-index:30; backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(11,18,32,0.9), rgba(11,18,32,0.7)); border-bottom:1px solid var(--border); }
+    .wrap { max-width:1080px; margin:0 auto; padding:14px 16px; }
+    .titlebar { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    h1 { margin:0; font-size:20px; letter-spacing:.3px }
+    .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    input, select, button, textarea {
+      background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; outline:none;
+    }
+    input::placeholder, textarea::placeholder { color:var(--muted) }
+    button.primary { background:var(--accent); color:#051225; border-color:#3a8fe0; font-weight:600 }
+    button.ghost { background:transparent }
+    .pill { background:var(--chip); color:var(--muted); padding:6px 10px; border-radius:999px; font-size:12px; border:1px solid var(--border) }
+    .grid { display:grid; gap:16px; grid-template-columns: repeat(12, 1fr) }
+    .col-12 { grid-column: span 12 }
+    .col-8 { grid-column: span 8 }
+    .col-4 { grid-column: span 4 }
+    @media (max-width: 900px){ .col-8,.col-4{ grid-column: span 12 } }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px }
+    .meta { display:flex; flex-wrap:wrap; gap:10px; align-items:center; color:var(--muted); font-size:12px }
+    .badge { font-size:11px; padding:3px 6px; border-radius:6px; border:1px solid var(--border) }
+    .oa { background: rgba(39,201,63,.14); color:#98f7a2 }
+    .link { color:var(--accent); text-decoration:none }
+    .muted { color:var(--muted) }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px }
+    .tag { background:var(--chip); color:var(--muted); padding:4px 8px; border-radius:999px; border:1px solid var(--border); font-size:12px }
+    .sep { height:1px; background:var(--border); margin:10px 0 }
+    details { background: rgba(255,255,255,.02); border:1px dashed var(--border); padding:10px; border-radius:12px }
+    summary { cursor:pointer; color:var(--muted) }
+    .empty { border:1px dashed var(--border); border-radius:14px; padding:14px; color:var(--muted) }
+    .shelf { display:flex; gap:10px; overflow:auto; padding-bottom:8px }
+    .err { color:#ff9a9f; font-size:12px }
+    .footer { text-align:center; color:var(--muted); font-size:12px; margin:24px 0 }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap titlebar">
+      <h1>每日高水平论文精选 · 海洋与气候</h1>
+      <div class="controls">
+        <input id="date" type="date" />
+        <select id="subfield" title="按子领域筛选">
+          <option value="">所有学科</option>
+          <option>海洋物理学</option>
+          <option>海洋化学</option>
+          <option>海洋生物学</option>
+          <option>海洋地质学</option>
+          <option>海洋地球物理学</option>
+          <option>沉积学</option>
+          <option>古气候学/古海洋学</option>
+          <option>气候变化科学</option>
+        </select>
+        <input id="search" placeholder="标题/作者/期刊/关键词…" />
+        <select id="venue" title="按期刊筛选"><option value="">所有期刊</option></select>
+        <button id="btn-import">导入JSON</button>
+        <button id="btn-export" class="ghost">导出</button>
+        <button id="btn-print" class="ghost">打印</button>
+        <button id="btn-settings" class="ghost">设置 ⚙️</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid">
+      <div class="col-8">
+        <h2 style="font-size:16px;margin:6px 0 10px;">今日精选 <span id="count" class="pill">0 篇</span></h2>
+        <div id="list" class="grid"></div>
+        <div id="empty" class="empty">本页会尝试从<strong>同域</strong>的 <code>/latest.json</code> 自动拉取数据；也可以点右上角<strong>设置</strong>填入自定义地址，或点击“导入JSON”粘贴内容。</div>
+        <div id="error" class="err"></div>
+      </div>
+      <aside class="col-4">
+        <section class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="margin:0;">Must‑read (3)</h3>
+            <span id="today" class="badge"></span>
+          </div>
+          <div id="mustread" class="shelf"></div>
+        </section>
+        <section class="card" style="margin-top:12px;">
+          <h3 style="margin:0 0 6px;">提示</h3>
+          <div class="muted" style="font-size:13px;line-height:1.6;">
+            将本文件放到 GitHub 仓库的 <code>docs/</code>，<u>同目录</u>放置 <code>latest.json</code>；或在“设置”中填入完整 JSON 地址并勾选“自动拉取”。
+          </div>
+        </section>
+      </aside>
+    </section>
+    <div class="footer">© 2025 离线单文件 · 自动拉取版</div>
+  </main>
+
+  <!-- 导入对话框 -->
+  <dialog id="dlg" style="border:1px solid var(--border); background: var(--card); color: var(--text); border-radius: 14px; padding:0; max-width: 900px; width: 90vw;">
+    <div class="wrap" style="padding:14px;">
+      <h3 style="margin:6px 0 10px;">导入每日摘要 JSON</h3>
+      <textarea id="json" placeholder='粘贴 {"date":"YYYY-MM-DD","must_read":[...], "items":[...] }' style="width:100%; min-height:220px;"></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+        <button id="dlg-cancel" class="ghost">取消</button>
+        <button id="dlg-save" class="primary">保存</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 设置对话框 -->
+  <dialog id="settings" style="border:1px solid var(--border); background: var(--card); color: var(--text); border-radius: 14px; padding:0; max-width: 760px; width: 90vw;">
+    <div class="wrap" style="padding:14px;">
+      <h3 style="margin:6px 0 12px;">数据源设置</h3>
+      <div style="display:grid; gap:10px;">
+        <label>远程 JSON 地址（留空则默认尝试 <code>/latest.json</code>）
+          <input id="feedUrl" placeholder="https://YOURNAME.github.io/REPO/latest.json" />
+        </label>
+        <label style="display:flex; align-items:center; gap:8px;">
+          <input id="autoFetch" type="checkbox" /> 打开页面时自动拉取
+        </label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+        <div class="muted" style="font-size:12px;">也可用 <code>?feed=URL</code> 作为一次性覆盖。</div>
+        <div style="display:flex;gap:8px;">
+          <button id="btn-test" class="ghost">立即测试拉取</button>
+          <button id="btn-save-settings" class="primary">保存设置</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const elList = $('#list'), elEmpty = $('#empty'), elCount = $('#count'), elDate = $('#date');
+    const elSub = $('#subfield'), elSearch = $('#search'), elVenue = $('#venue'), elMust = $('#mustread'), elToday = $('#today');
+    const dlg = $('#dlg'), elJson = $('#json');
+    const settings = $('#settings'), elFeedUrl = $('#feedUrl'), elAutoFetch = $('#autoFetch');
+    const elErr = $('#error');
+
+    const KEY = "ocd_digests_v1";
+    const CFG = "ocd_cfg_v1";
+
+    function readAll(){ try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } }
+    function writeAll(d) { localStorage.setItem(KEY, JSON.stringify(d)); }
+    function upsertDigest(d) { const all = readAll().filter(x => x.date !== d.date); all.push(d); writeAll(all); }
+    function getDigest(dateStr){ return readAll().find(x => x.date === dateStr) || null; }
+    function unique(a){ return Array.from(new Set(a)); }
+    function esc(s){ return String(s||'').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',\"'\":'&#39;','\"':'&quot;'}[c])); }
+
+    function cardHTML(it){
+      const sub = Array.isArray(it.subfield) ? it.subfield.join(' / ') : (it.subfield || '');
+      return `<article class="card">
+        <div class="meta">
+          <span class="badge ${it.oa?'oa':''}">${it.oa?'OA':'可能付费'}</span>
+          <span class="pill">${esc(it.venue||'')}</span>
+          <span class="pill">${esc(sub)}</span>
+          <span class="pill">${esc(it.year||'')}</span>
+        </div>
+        <h3><a class="link" href="${it.link||'#'}" target="_blank" rel="noopener">${esc(it.title||'Untitled')}</a></h3>
+        <div class="muted">${(it.authors||[]).slice(0,3).join(', ')}${(it.authors||[]).length>3?', 等.':''}</div>
+        <div class="tags">${(it.keywords||[]).slice(0,6).map(k=>`<span class="tag">${esc(k)}</span>`).join('')}</div>
+        <div class="sep"></div>
+        <div><b>关键结论：</b>${esc(it.summary||'')}</div>
+        <details style="margin-top:8px;">
+          <summary>展开：与以往研究对比 & 未解决问题</summary>
+          <div style="margin-top:8px;"><b>与以往研究对比：</b> ${esc(it.context||'')}</div>
+          <div style="margin-top:6px;"><b>未解决的科学问题：</b> ${esc(it.open_question||'')}</div>
+        </details>
+      </article>`;
+    }
+
+    function populateVenueOptions(digest) {
+      const venues = digest ? unique((digest.items||[]).map(i => i.venue).filter(Boolean)) : [];
+      elVenue.innerHTML = '<option value=\"\">所有期刊</option>' + venues.map(v => `<option>${esc(v)}</option>`).join('');
+    }
+
+    function render(digest){
+      elToday.textContent = digest ? digest.date : "";
+      const q=(elSearch.value||'').toLowerCase();
+      const sub=elSub.value, ven=elVenue.value;
+      const items = (digest?.items||[]).filter(it => {
+        const subfieldStr = Array.isArray(it.subfield) ? it.subfield.join(' / ') : (it.subfield || '');
+        const matchQ = !q || [it.title, (it.authors||[]).join(', '), it.venue, (it.keywords||[]).join(' '), subfieldStr].join(' ').toLowerCase().includes(q);
+        const matchSub = !sub || subfieldStr === sub;
+        const matchVen = !ven || it.venue === ven;
+        return matchQ && matchSub && matchVen;
+      });
+      elList.innerHTML='';
+      if (!items.length){ elEmpty.classList.remove('hidden'); elCount.textContent='0 篇'; }
+      else {
+        elEmpty.classList.add('hidden'); elCount.textContent = items.length + ' 篇';
+        items.forEach(it => { const col = document.createElement('div'); col.className='col-12'; col.innerHTML = cardHTML(it); elList.appendChild(col); });
+      }
+      // must-read
+      const ids = new Set(digest?.must_read || []);
+      elMust.innerHTML='';
+      (digest?.items||[]).filter(x=>ids.has(x.doi)).slice(0,3).forEach(it => {
+        const a=document.createElement('a'); a.href=it.link; a.target='_blank'; a.className='card'; a.style.minWidth='260px';
+        const sub = Array.isArray(it.subfield) ? it.subfield.join(' / ') : (it.subfield || '');
+        a.innerHTML = `<div class="meta" style="margin-bottom:6px;">
+          <span class="badge ${it.oa?'oa':''}">${it.oa?'OA':'可能付费'}</span>
+          <span class="pill">${esc(it.venue||'')}</span>
+          <span class="pill">${esc(sub)}</span>
+        </div>
+        <div style="font-weight:600; line-height:1.3;">${esc(it.title)}</div>
+        <div class="muted" style="margin-top:6px; font-size:12px;">${(it.authors||[]).slice(0,3).join(', ')}${(it.authors||[]).length>3?', 等.':''} · ${esc(it.year||'')}</div>`;
+        elMust.appendChild(a);
+      });
+    }
+
+    function saveConfig(cfg){ localStorage.setItem(CFG, JSON.stringify(cfg)); }
+    function loadConfig(){ try{ return JSON.parse(localStorage.getItem(CFG) || "{}"); } catch { return {}; } }
+
+    async function fetchAndImport(url){
+      const u = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      const res = await fetch(u, {cache:'no-store'});
+      if (!res.ok) throw new Error('拉取失败：HTTP ' + res.status);
+      const data = await res.json();
+      if (!data.date || !Array.isArray(data.items)) throw new Error('JSON 结构不符合要求（需要包含 date 与 items）');
+      upsertDigest(data);
+      elDate.value = data.date;
+      populateVenueOptions(data);
+      render(data);
+      elErr.textContent = '';
+      return data.date;
+    }
+
+    function urlParam(name){
+      const m = new RegExp('[?&]'+name+'=([^&]+)').exec(location.search);
+      return m ? decodeURIComponent(m[1]) : '';
+    }
+
+    function init(){
+      // Default date = yesterday (local)
+      const now = new Date(); const y = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1);
+      const ds = y.toISOString().slice(0,10); elDate.value = ds;
+
+      // Settings button
+      $('#btn-settings').addEventListener('click', () => {
+        const cfg = loadConfig();
+        elFeedUrl.value = cfg.feedUrl || '';
+        elAutoFetch.checked = !!cfg.autoFetch;
+        settings.showModal();
+      });
+      $('#btn-save-settings').addEventListener('click', () => {
+        saveConfig({ feedUrl: elFeedUrl.value.trim(), autoFetch: elAutoFetch.checked });
+        settings.close();
+      });
+      $('#btn-test').addEventListener('click', async () => {
+        try {
+          const date = await fetchAndImport(elFeedUrl.value.trim() || (location.origin + location.pathname.replace(/index\\.html$/, '') + 'latest.json'));
+          alert('成功拉取并导入：' + date);
+          settings.close();
+        } catch(e){ alert(e.message); }
+      });
+
+      // Import dialog
+      $('#btn-import').addEventListener('click', () => { elJson.value=''; dlg.showModal(); });
+      $('#dlg-cancel').addEventListener('click', () => dlg.close());
+      $('#dlg-save').addEventListener('click', () => {
+        try{
+          const obj = JSON.parse(elJson.value);
+          if (!obj.date || !Array.isArray(obj.items)) throw new Error('缺少必填字段 date / items');
+          upsertDigest(obj); elDate.value=obj.date; populateVenueOptions(obj); render(obj); dlg.close();
+        }catch(err){ alert('JSON 无法解析：' + err.message); }
+      });
+
+      // export/print
+      $('#btn-export').addEventListener('click', () => {
+        const d=getDigest(elDate.value); if(!d){ alert('没有可导出的数据'); return; }
+        const blob = new Blob([JSON.stringify(d, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `digest_${d.date}.json`; a.click();
+      });
+      $('#btn-print').addEventListener('click', () => window.print());
+
+      // filters
+      [elSub, elSearch, elVenue].forEach(el => el.addEventListener('input', () => render(getDigest(elDate.value))));
+      elDate.addEventListener('change', () => { const d=getDigest(elDate.value); populateVenueOptions(d); render(d); });
+
+      // Auto-fetch order: ?feed=... > cfg.feedUrl (if autoFetch) > same-origin /latest.json
+      (async () => {
+        const feedParam = urlParam('feed');
+        const cfg = loadConfig();
+        let tried = false;
+        try {
+          if (feedParam) { tried = true; await fetchAndImport(feedParam); return; }
+          if (cfg.feedUrl && cfg.autoFetch) { tried = true; await fetchAndImport(cfg.feedUrl); return; }
+          // try same-origin /latest.json
+          const base = location.origin + location.pathname.replace(/index\\.html$/, '');
+          tried = true;
+          await fetchAndImport(base + 'latest.json');
+        } catch(e){
+          if (tried) elErr.textContent = '自动拉取失败：' + e.message + '（可在右上角“设置”填入 JSON 地址，或点“导入JSON”手动粘贴）';
+          const d = getDigest(elDate.value); populateVenueOptions(d); render(d);
+        }
+      })();
+    }
+    init();
+  </script>
+</body>
+</html>
