@@ -6,35 +6,45 @@
   <title>每日高水平论文精选 · 海洋与气候</title>
   <style>
     :root {
-      --bg: #0b1220;
-      --card: #111a2b;
+      --bg: radial-gradient(circle at top, #0f172a 0%, #0b1220 42%, #060912 100%);
+      --card: rgba(17, 26, 43, 0.95);
       --text: #e7eefc;
       --muted: #9bb0d0;
       --accent: #4aa3ff;
-      --chip: #1b2740;
-      --border: #2a3a58;
+      --chip: rgba(27, 39, 64, 0.6);
+      --border: rgba(42, 58, 88, 0.7);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow: 0 18px 35px rgba(0,0,0,0.25);
     }
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
+      min-height: 100vh;
       background: var(--bg);
+      background-attachment: fixed;
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans",
         "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0.01em;
     }
+
     header {
       position: sticky;
       top: 0;
       z-index: 30;
-      backdrop-filter: blur(8px);
-      background: linear-gradient(180deg, rgba(11, 18, 32, 0.9), rgba(11, 18, 32, 0.7));
-      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(11, 18, 32, 0.75);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     }
+
     .wrap {
       max-width: 1080px;
       margin: 0 auto;
       padding: 14px 16px;
     }
+
     .titlebar {
       display: flex;
       gap: 12px;
@@ -42,42 +52,75 @@
       justify-content: space-between;
       flex-wrap: wrap;
     }
+
     h1 {
       margin: 0;
       font-size: 20px;
       letter-spacing: 0.3px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
     }
+    h1::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+    }
+
     .controls {
       display: flex;
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
+
     input, select, button, textarea {
-      background: var(--card);
+      background: rgba(8, 12, 21, 0.35);
       color: var(--text);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148, 163, 184, 0.12);
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       outline: none;
+      transition: border .1s ease-out, background .1s ease-out, transform .1s ease-out;
+      font-size: 13px;
     }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(74, 163, 255, 0.7);
+      background: rgba(10, 16, 29, 0.55);
+    }
+
     button.primary {
-      background: var(--accent);
+      background: linear-gradient(135deg, #38bdf8, #4aa3ff);
       color: #051225;
-      border-color: #3a8fe0;
+      border-color: rgba(58, 143, 224, 0.2);
       font-weight: 600;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.25);
+      cursor: pointer;
+    }
+    button.primary:hover {
+      filter: brightness(1.03);
+      transform: translateY(-1px);
     }
     button.ghost {
-      background: transparent;
+      background: rgba(11,18,32,0.2);
+      cursor: pointer;
     }
+    button.ghost:hover {
+      background: rgba(148,163,184,0.05);
+    }
+
     .pill {
-      background: var(--chip);
+      background: rgba(27, 39, 64, 0.4);
       color: var(--muted);
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 999px;
       font-size: 12px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148, 163, 184, 0.08);
     }
+
     .grid {
       display: grid;
       gap: 16px;
@@ -89,62 +132,130 @@
     @media (max-width: 900px) {
       .col-8, .col-4 { grid-column: span 12; }
     }
+
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.08);
+      border-radius: var(--radius-lg);
       padding: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      backdrop-filter: blur(4px);
+      transition: transform .1s ease-out, border .1s ease-out;
     }
+    .card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(74, 163, 255, 0.3);
+    }
+
     .meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       color: var(--muted);
       font-size: 12px;
     }
+
     .badge {
       font-size: 11px;
       padding: 3px 6px;
       border-radius: 6px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148,163,184,0.12);
     }
     .oa {
-      background: rgba(39, 201, 63, 0.14);
-      color: #98f7a2;
+      background: rgba(39, 201, 63, 0.15);
+      color: #c3f1ca;
+      border-color: rgba(39, 201, 63, 0.4);
     }
-    .link { color: var(--accent); text-decoration: none; }
-    .muted { color: var(--muted); }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .tag { background: var(--chip); color: var(--muted); padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; }
-    .sep { height: 1px; background: var(--border); margin: 10px 0; }
-    details { background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--border); padding: 10px; border-radius: 12px; }
-    summary { cursor: pointer; color: var(--muted); }
-    .empty { border: 1px dashed var(--border); border-radius: 14px; padding: 14px; color: var(--muted); }
-    .shelf { display: flex; gap: 10px; overflow: auto; padding-bottom: 8px; }
-    .err { color: #ff9a9f; font-size: 12px; }
-    .footer { text-align: center; color: var(--muted); font-size: 12px; margin: 24px 0; }
 
-    /* 简单弹窗样式 */
+    .link { color: var(--text); text-decoration: none; }
+    .link:hover { color: #fff; }
+
+    .muted { color: var(--muted); }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tag {
+      background: rgba(15, 23, 42, 0.3);
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.04);
+      font-size: 12px;
+    }
+
+    .sep {
+      height: 1px;
+      background: rgba(148,163,184,0.04);
+      margin: 12px 0;
+    }
+
+    details {
+      background: rgba(148, 163, 184, 0.02);
+      border: 1px dashed rgba(148, 163, 184, 0.08);
+      padding: 10px;
+      border-radius: 12px;
+    }
+    summary { cursor: pointer; color: var(--muted); }
+
+    .empty {
+      border: 1px dashed rgba(148, 163, 184, 0.08);
+      border-radius: 14px;
+      padding: 14px;
+      color: var(--muted);
+      background: rgba(15,23,42,0.25);
+    }
+
+    .shelf {
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      padding-bottom: 6px;
+    }
+    .shelf .card {
+      min-width: 240px;
+      cursor: pointer;
+    }
+
+    .err { color: #ff9a9f; font-size: 12px; }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 24px 0;
+      opacity: .6;
+    }
+
+    /* modal */
     .modal-mask {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.5);
+      background: rgba(0,0,0,.45);
       display: none;
       z-index: 100;
       align-items: center;
       justify-content: center;
       padding: 10px;
+      animation: fadeIn .12s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
     }
     .modal {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: rgba(11, 18, 32, 0.9);
+      border: 1px solid rgba(148,163,184,0.12);
       border-radius: 14px;
       max-width: 900px;
       width: 100%;
       max-height: 90vh;
       overflow: auto;
       padding: 16px;
+      box-shadow: var(--shadow);
     }
     .modal header {
       position: static;
@@ -157,6 +268,7 @@
       width: 100%;
       min-height: 220px;
       resize: vertical;
+      background: rgba(15,23,42,0.35);
     }
     .modal-footer {
       display: flex;
@@ -292,7 +404,7 @@
     }
     function uniq(a) { return Array.from(new Set(a)); }
     function esc(s) {
-      return String(s || '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      return String(s || '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]);
     }
 
     function cardHTML(it) {
@@ -305,11 +417,11 @@
           <span class="pill">${esc(sub)}</span>
           <span class="pill">${esc(it.year || '')}</span>
         </div>
-        <h3><a class="link" href="${it.link || '#'}" target="_blank" rel="noopener">${esc(it.title || 'Untitled')}</a></h3>
+        <h3 style="margin:10px 0 6px;"><a class="link" href="${it.link || '#'}" target="_blank" rel="noopener">${esc(it.title || 'Untitled')}</a></h3>
         <div class="muted">${(it.authors || []).slice(0, 3).join(', ')}${(it.authors || []).length > 3 ? ', 等.' : ''}</div>
         <div class="tags">${(it.keywords || []).slice(0, 6).map(k => `<span class="tag">${esc(k)}</span>`).join('')}</div>
         <div class="sep"></div>
-        <div><b>关键结论：</b>${esc(it.summary || '')}</div>
+        <div style="line-height:1.6;"><b>关键结论：</b>${esc(it.summary || '')}</div>
         <details style="margin-top:8px;">
           <summary>展开：与以往研究对比 & 未解决问题</summary>
           <div style="margin-top:8px;"><b>与以往研究对比：</b> ${esc(it.context || '')}</div>
@@ -414,6 +526,12 @@
       importCancel.addEventListener('click', () => {
         importMask.style.display = 'none';
       });
+      // 点遮罩空白处关闭
+      importMask.addEventListener('click', (e) => {
+        if (e.target === importMask) {
+          importMask.style.display = 'none';
+        }
+      });
       importSave.addEventListener('click', () => {
         try {
           const obj = JSON.parse(jsonInput.value);
@@ -425,6 +543,8 @@
           importMask.style.display = 'none';
         } catch (e) {
           alert('JSON 无法解析：' + e.message);
+          // 如果你希望错误时不关闭，可以注释下一行
+          importMask.style.display = 'none';
         }
       });
 
@@ -439,11 +559,19 @@
         saveConfig({ feedUrl: feedUrlInput.value.trim(), autoFetch: autoFetchInput.checked });
         settingsMask.style.display = 'none';
       });
+      // 点遮罩空白处关闭
+      settingsMask.addEventListener('click', (e) => {
+        if (e.target === settingsMask) {
+          settingsMask.style.display = 'none';
+        }
+      });
       settingsTest.addEventListener('click', async () => {
         try {
           const u = feedUrlInput.value.trim() || (location.origin + location.pathname.replace(/index\.html$/, '') + 'latest.json');
           const d = await fetchAndImport(u);
           alert('成功拉取并导入：' + d);
+          // 看需求要不要自动关
+          // settingsMask.style.display = 'none';
         } catch (e) {
           alert(e.message);
         }
