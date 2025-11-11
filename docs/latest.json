@@ -1,5 +1,20 @@
 {
-  "date": "2025-11-11",
-  "items": [],
-  "must_read": []
+  "date": "2025-11-10",
+  "items": [
+    {
+      "doi": "10.1234/demo",
+      "title": "测试论文：页面连通性验证",
+      "venue": "Ocean Test Journal",
+      "year": 2025,
+      "authors": ["First Author", "Second Author"],
+      "subfield": "气候变化科学",
+      "summary": "这是一个示例条目，用于验证网页渲染。",
+      "context": "真实环境下这里会显示论文与前人研究的对比。",
+      "open_question": "未来如何自动生成这些每日摘要？",
+      "link": "https://example.org",
+      "oa": true,
+      "keywords": ["demo", "validation"]
+    }
+  ],
+  "must_read": ["10.1234/demo"]
 }
